@@ -1,5 +1,7 @@
+const db = require('../config/database.config');
+
 class UserRepository {
-  async create() {
+  async create(user) {
     const script = `
       INSERT INTO users
       (name, email, password, documentNumber, status)
@@ -8,7 +10,7 @@ class UserRepository {
       RETURNING id
     `;
 
-    const values = [];
+    const values = [user.name, user.email, user.password, user.documentNumber, user.status, user.id];
 
     const { rows } = await db.query(script, values);
     const [ newUser ] = rows;
@@ -31,7 +33,27 @@ class UserRepository {
   }
 
   async update() {
-    
+    const script = `
+      UPDATE users
+      SET 
+        name = $1,
+        email = $2,
+        password = crypt($3, 'my_salt'),
+        documentNumber = $4,
+        status = $5
+      WHERE id = $6
+    `;
+
+    const values = [
+      user.name, 
+      user.email, 
+      user.password, 
+      user.documentNumber, 
+      user.status, 
+      user.id
+    ];
+
+    await db.query(script, values)
   }
 
   async remove() {
