@@ -4,20 +4,20 @@ const userView = require('../views/UserView');
 
 class UserController {
   async createUser(req, res) {
-    const { name, email, password, documentNumber } = req.body;
+    const { name, email, password, documentNumber, status } = req.body;
     const id = new Date().getTime();
 
-    const newUser = new User(id, name, email, password, documentNumber);
+    const newUser = new User(id, name, email, password, documentNumber, status);
 
     await userRepository.create(newUser);
 
     return userView.renderSuccess(res, { message: 'Cadastrado com sucesso' });
   }
 
-  async listUsers(res) {
+  async listUsers(req, res) {
     const users = await userRepository.list();
 
-    return userView.renderSuccess(res, users);
+    return userView.renderUsers(res, users);
   }
 
   async showUser() {
@@ -33,4 +33,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+module.exports = UserController;
