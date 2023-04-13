@@ -28,9 +28,11 @@ class UserRepository {
     return rows || [];
   }
 
-  async show() {
-
-  }
+  // async show() {
+  //   const query = `
+  //     SELECT 
+  //   `;
+  // }
 
   async update() {
     const script = `
@@ -56,8 +58,14 @@ class UserRepository {
     await db.query(script, values)
   }
 
-  async remove() {
+  async remove(id) {
+    const script = `
+      DELETE FROM users WHERE id = $1
+    `;
 
+    const values = [id];
+
+    await db.query(script, values);
   }
 }
 
