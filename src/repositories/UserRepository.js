@@ -34,6 +34,27 @@ class UserRepository {
   //   `;
   // }
 
+  async findByEmailAndPassword(email, password) {
+    try {
+      const query = `
+        SELECT id, email
+        FROM list_users WHERE
+        useremail = $1 AND
+        password = crypt($2, 'my_salt')
+      `;
+
+      const values = [email, password]
+
+      const { rows } = await db.query(query, values);
+      const [ user ] = rows;
+
+      return user || null
+
+    } catch(error) {
+      console.log('Query Error by useremail and password', error)
+    }
+  }
+
   async update() {
     const script = `
       UPDATE users
