@@ -9,9 +9,10 @@ async function authenticateUser(email, password) {
     return null;
   }
 
-  const token = jwt.sign({ id: toString(user.id) }, secretKey);
+  const token = jwt.sign({ id: toString(user.id) }, secretKey, { expiresIn: '1h' });
+  const refreshToken = jwt.sign({ id: toString(user.id) }, secretKey, { expiresIn: '3h' })
 
-  return token;
+  return { token, refreshToken };
 }
 
 async function basicAuthetication(req, res, next) {
