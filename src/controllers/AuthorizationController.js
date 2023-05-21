@@ -17,37 +17,29 @@ class AuthorizationController {
   }
 
   async validateUser(req, res, next) {
-    const { token } = req.body;
-
     try {
+      const { token } = req.body;
 
       if (!token) {
         return res.status(400).json({ message: 'Token de autenticação não fornecido' });
       }
   
-
-      const decodedToken = verifyAuthToken(token);
+      const decodedToken = basicAuthentication(token);
   
       if (!decodedToken) {
         return res.status(401).json({ message: 'Token de autenticação inválido' });
       }
-  
-
-      const user = await User.findById(decodedToken.userId);
-  
-      if (!user) {
-        return res.status(404).json({ message: 'Usuário não encontrado' });
-      }
-  
-
-      req.user = user;
-  
-
-      next();
     } catch (error) {
-
       return next(error);
     }
+  }
+
+  async refreshValidation(req, res, next) {
+
+  }
+
+  async logoutUser(req, res, next) {
+
   }
 }
 
