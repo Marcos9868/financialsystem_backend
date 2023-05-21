@@ -1,3 +1,4 @@
+const JWT= require('jsonwebtoken')
 
 class AuthorizationController {
   async loginUser(req, res, next) {
@@ -5,25 +6,22 @@ class AuthorizationController {
 
     try {
 
-      const user = await User.findOne({ email });
+      const user = req.user;
   
       if (!user) {
 
         return res.status(404).json({ message: 'Usuário não encontrado' });
       }
+
+      const jwtPayLoad = {email :user.email}
+      const jwtOptions = {subject:user.id}
+      const secretKey = "123456"
+      
+      const jwt = JWT.sign(jwtPayLoad, secretKey,jwtOptions)
+      
   
 
-      const isPasswordValid = await user.comparePassword(password);
-  
-      if (!isPasswordValid) {
-
-        return res.status(401).json({ message: 'Senha inválida' });
-      }
-  
-      const token = generateAuthToken(user);
-  
-
-      return res.status(200).json({ token });
+      return res.status(200).json({ token:jwt });
     } catch (error) {
 
       return next(error);
