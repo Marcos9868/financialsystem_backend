@@ -1,27 +1,17 @@
-const JWT= require('jsonwebtoken')
+const { authenticateUser } = require('../middlewares/basic-authentication.middleware');
 
 class AuthorizationController {
   async loginUser(req, res, next) {
     try {
-
-      const user = req.user;
-  
-      if (!user) {
-
-        return res.status(404).json({ message: 'Usuário não encontrado' });
+      const { email, password } = req.body;
+      const token = authenticateUser(email, password);
+      
+      if(!token) {
+        res.status(401).send({ message: 'User not found' });
       }
 
-      const jwtPayLoad = { email: user.email, password: user.password }
-      const jwtOptions = { subject: toString(user.id) }
-      const secretKey = "123456"
-      
-      const jwt = JWT.sign(jwtPayLoad, secretKey, jwtOptions)
-      
-  
-
-      return res.status(200).json({ token: jwt });
+      return res.status(200).send({ token });
     } catch (error) {
-
       return next(error);
     }
     

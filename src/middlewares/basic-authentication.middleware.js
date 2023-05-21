@@ -1,36 +1,29 @@
 const userRepository = require('../repositories/UserRepository');
+const jwt = require('jsonwebtoken');
+const secretKey = 'oshdaiusdoashdasuhdoasd';
 
+function authenticateUser(email, password) {
+  const user = userRepository.findByEmailAndPassword(email, password)
+
+  if (!user) {
+    return null;
+  }
+
+  const token = jwt.sign({ id: toString(user.id) }, secretKey);
+
+  return token;
+}
 
 async function basicAuthetication(req, res, next) {
   try {
     const authorizationHeader = req.headers['authorization']
-    console.log(authorizationHeader)
-
-    if (!authorizationHeader) {
-      throw new Error('Uninformed Credentials')
-    }
-    const [autheticationType, token] = authorizationHeader.split(' ')
-
-    if (autheticationType !== 'Basic' || !token) {
-      throw new Error('Invalid Authentication Type')
-    }
-
-    const tokenContent = Buffer.from(token, 'base64').toString('utf-8')
-
-    const [email, password] = tokenContent.split(':')
+    const token = authorizationHeader && authorizationHeader.split(' ')[1];
     
-    if (!email || !password) {
-      throw new Error('Unfilled credentials')
+    if(!token) {
+      return res.status(401).send({ message: 'Token not found' });
     }
 
-    const user = await userRepository.findByEmailAndPassword(email, password)
-
-    if (!user) {
-      throw new Error('Invalid email or password')
-    }
-
-    req.user = user
-    
+    const decodedToken = jwt.verify();
     next()
 
   } catch (error) {
@@ -38,5 +31,5 @@ async function basicAuthetication(req, res, next) {
   }
 }
 
-module.exports = basicAuthetication
+exports = { authenticateUser, basicAuthetication }
 
