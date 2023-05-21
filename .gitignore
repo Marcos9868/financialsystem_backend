@@ -2,3 +2,4 @@ node_modules
 yarn.lock
 .env
 backup.js
+package-lock.json
