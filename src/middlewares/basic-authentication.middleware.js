@@ -26,7 +26,7 @@ async function basicAuthetication(req, res, next) {
     const user = await userRepository.findByEmailAndPassword(email, password)
 
     if (!user) {
-      throw new Error('Invalid useremaiil or password')
+      throw new Error('Invalid email or password')
     }
 
     req.user = user

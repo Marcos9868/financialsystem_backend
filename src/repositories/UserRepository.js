@@ -37,9 +37,9 @@ class UserRepository {
   async findByEmailAndPassword(email, password) {
     try {
       const query = `
-        SELECT id, email
-        FROM list_users WHERE
-        useremail = $1 AND
+        SELECT id, email, password
+        FROM users WHERE
+        email = $1 AND
         password = crypt($2, 'my_salt')
       `;
 
@@ -51,7 +51,7 @@ class UserRepository {
       return user || null
 
     } catch(error) {
-      console.log('Query Error by useremail and password', error)
+      console.log('Query Error by email and password', error)
     }
   }
 

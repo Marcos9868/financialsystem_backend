@@ -2,8 +2,6 @@ const JWT= require('jsonwebtoken')
 
 class AuthorizationController {
   async loginUser(req, res, next) {
-    const { email, password } = req.body;
-
     try {
 
       const user = req.user;
@@ -13,15 +11,15 @@ class AuthorizationController {
         return res.status(404).json({ message: 'Usuário não encontrado' });
       }
 
-      const jwtPayLoad = {email :user.email}
-      const jwtOptions = {subject:user.id}
+      const jwtPayLoad = { email: user.email, password: user.password }
+      const jwtOptions = { subject: toString(user.id) }
       const secretKey = "123456"
       
-      const jwt = JWT.sign(jwtPayLoad, secretKey,jwtOptions)
+      const jwt = JWT.sign(jwtPayLoad, secretKey, jwtOptions)
       
   
 
-      return res.status(200).json({ token:jwt });
+      return res.status(200).json({ token: jwt });
     } catch (error) {
 
       return next(error);
