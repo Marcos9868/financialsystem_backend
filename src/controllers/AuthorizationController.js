@@ -1,10 +1,10 @@
-const { authenticateUser } = require('../middlewares/basic-authentication.middleware');
+const authenticateUser = require('../middlewares/basic-authentication.middleware');
 
 class AuthorizationController {
   async loginUser(req, res, next) {
     try {
       const { email, password } = req.body;
-      const token = authenticateUser(email, password);
+      const token = await authenticateUser(email, password);
       
       if(!token) {
         res.status(401).send({ message: 'User not found' });
@@ -14,7 +14,6 @@ class AuthorizationController {
     } catch (error) {
       return next(error);
     }
-    
   }
 
   async validateUser(req, res, next) {

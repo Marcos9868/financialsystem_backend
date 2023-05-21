@@ -2,8 +2,8 @@ const userRepository = require('../repositories/UserRepository');
 const jwt = require('jsonwebtoken');
 const secretKey = 'oshdaiusdoashdasuhdoasd';
 
-function authenticateUser(email, password) {
-  const user = userRepository.findByEmailAndPassword(email, password)
+async function authenticateUser(email, password) {
+  const user = await userRepository.findByEmailAndPassword(email, password)
 
   if (!user) {
     return null;
@@ -31,5 +31,4 @@ async function basicAuthetication(req, res, next) {
   }
 }
 
-exports = { authenticateUser, basicAuthetication }
-
+module.exports = authenticateUser;
