@@ -1,12 +1,13 @@
-const authenticateUser = require('../middlewares/basic-authentication.middleware');
+const { authenticateUser, validateToken } = require('../middlewares/basic-authentication.middleware');
+const AuthenticationView = require('../views/AuthenticationView');
 
 class AuthorizationController {
   async loginUser(req, res, next) {
     try {
       const { email, password } = req.body;
       const token = await authenticateUser(email, password);
-      
-      if(!token) {
+
+      if (!token) {
         res.status(401).send({ message: 'User not found' });
       }
 
@@ -16,22 +17,18 @@ class AuthorizationController {
     }
   }
 
-  async validateUser(req, res, next) {
-    try {
-      const { token } = req.body;
+  async validateUser(req, res) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
-      if (!token) {
-        return res.status(400).json({ message: 'Token de autenticação não fornecido' });
-      }
-  
-      const decodedToken = basicAuthentication(token);
-  
-      if (!decodedToken) {
-        return res.status(401).json({ message: 'Token de autenticação inválido' });
-      }
-    } catch (error) {
-      return next(error);
+    const validate = validateToken(token);
+
+    if (!validate) {
+      return AuthenticationView.renderError(res, 400, { message: 'Token expired' });
     }
+
+    return AuthenticationView.renderSuccess(res, { message: 'Token validated' });
+
   }
 
   async refreshValidation(req, res, next) {
