@@ -15,21 +15,20 @@ async function authenticateUser(email, password) {
   return { token, refreshToken };
 }
 
-async function basicAuthetication(req, res, next) {
-  try {
-    const authorizationHeader = req.headers['authorization']
-    const token = authorizationHeader && authorizationHeader.split(' ')[1];
-    
-    if(!token) {
-      return res.status(401).send({ message: 'Token not found' });
+async function validateToken(token) {
+  if (!token) {
+    return res.status(401).send({ message: 'Token não fornecido' });
+  }
+
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: 'Token inválido' });
     }
 
-    const decodedToken = jwt.verify();
-    next()
-
-  } catch (error) {
-    next(error)
-  }
+    // Adiciona o ID do usuário ao objeto de solicitação para uso posterior
+    req.userId = decoded.id;
+    next();
+  });
 }
 
-module.exports = authenticateUser;
+module.exports = { authenticateUser, validateToken }
