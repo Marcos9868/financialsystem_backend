@@ -31,7 +31,7 @@ class AuthorizationController {
 
   }
 
-  async refreshValidation(req, res, next) {
+  async refreshUserToken(req, res, next) {
 
   }
 
