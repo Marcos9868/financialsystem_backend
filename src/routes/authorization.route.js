@@ -4,6 +4,6 @@ const authorizationController = require('../controllers/AuthorizationController'
 const authorizationRoute = Router();
 
 authorizationRoute.post('/login', authorizationController.loginUser);
-authorizationRoute.post('/validate', authorizationController.validateUser);
+authorizationRoute.get('/validate', authorizationController.validateUser);
 
 module.exports = authorizationRoute;
