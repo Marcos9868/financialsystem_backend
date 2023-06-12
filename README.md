@@ -2,6 +2,19 @@
 
 ## Objective:
 
+This API is a business rule of a financial management application. It contains all the rules and functionalities for the client to work perfectly on the web. 
+
+It consists of 3 important parts: 
+- Authentication system 
+- User's CRUD, 
+- Dashboard functionalities.
+
+### Authentication System:
+
+### User's CRUD:
+
+### Dashboard's Functionalities:
+
 ## Get Started:
 
 ## Used Stacks:
